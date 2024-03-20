@@ -2,25 +2,6 @@
 
 public class TowerManager : MonoBehaviour
 {
-    private GameObject currentPlacement;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (currentPlacement != null) { }
-    }
-
-    public void SelectTowerToPlace(TowerData towerData)
-    {
-        if (currentPlacement == null)
-            currentPlacement = ConstructTower(towerData);
-    }
-
     private GameObject ConstructTower(TowerData towerData)
     {
         GameObject towerBase = Instantiate(towerData.BasePrefab);
