@@ -7,14 +7,14 @@ public abstract class BaseTower : MonoBehaviour
 	[SerializeField] protected Transform shootingPoint;
 
 	protected Transform _currentTarget;
+	protected ProjectileData _projectileData;
 
 	private TowerData          _towerData;
-	private ProjectileData     _projectileData;
 	private SphereCollider     _collider;
 	private Timer              _cooldownTimer;
 	private HashSet<Transform> _allTargets;
 
-	private bool onCooldown => _cooldownTimer.CurrentDuration > 0f;
+	private bool _isInit;
 
 	public void Init(TowerData towerData)
     {
@@ -24,6 +24,7 @@ public abstract class BaseTower : MonoBehaviour
 		_collider.radius = _towerData.Range;
 		_cooldownTimer = new Timer();
 		_allTargets = new HashSet<Transform>();
+		_isInit = true;
 	}
 
 	protected abstract void Fire();
@@ -76,8 +77,9 @@ public abstract class BaseTower : MonoBehaviour
 
 	private void Update()
 	{
+		if (!_isInit) return;
 		_cooldownTimer.Tick(Time.deltaTime);
-		if (!onCooldown && _currentTarget != null)
+		if (_cooldownTimer.CurrentDuration <= 0f && _currentTarget != null)
 		{
 			Fire();
 			_cooldownTimer.Start(_towerData.Cooldown);
@@ -86,12 +88,14 @@ public abstract class BaseTower : MonoBehaviour
 
 	private void OnTriggerEnter(Collider other)
 	{
+		if (!_isInit) return;
 		if (other.gameObject.layer != _towerData.TargetLayer) return;
 		AddTarget(other.transform);
     }
 
     private void OnTriggerExit(Collider other)
     {
+		if (!_isInit) return;
 		if (other.gameObject.layer != _towerData.TargetLayer) return;
 		RemoveTarget(other.transform);
     } 

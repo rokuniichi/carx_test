@@ -2,7 +2,10 @@
 using System;
 using System.Collections.Generic;
 
-public class Monster : MonoBehaviour, IKillable, IDamagable, IPoolable {
+public class Monster : MonoBehaviour, IKillable, IDamagable, IPoolable, IPredictable {
+
+	public Action<Transform> OnKill { get; set; }
+	public Vector3 LastSpeed => _lastSpeed;
 
 	private MonsterData _monsterData;
 	private List<Transform> _path;
@@ -10,13 +13,13 @@ public class Monster : MonoBehaviour, IKillable, IDamagable, IPoolable {
 	private float _health;
 	private float _speed;
 
+	private Vector3 _lastSpeed;
+
 	private Transform _moveTarget;
 
 	private int _currentIndex;
 
-	public Action<Transform> OnKill { get; set; }
-
-	public void Init(MonsterData monsterData, List<Transform> path)
+    public void Init(MonsterData monsterData, List<Transform> path)
     {
 		_monsterData = monsterData;
 		_path = path;
@@ -51,14 +54,17 @@ public class Monster : MonoBehaviour, IKillable, IDamagable, IPoolable {
 		if (_moveTarget == null)
 			return;
 
-		Vector3 translation = _moveTarget.transform.position - transform.position;
+		Vector3 direction = _moveTarget.transform.position - transform.position;
 		float frameDistance = _speed * Time.deltaTime;
-		if (translation.magnitude > frameDistance)
+		if (direction.magnitude > frameDistance)
 		{
-			transform.Translate(translation.normalized * frameDistance);
+			_lastSpeed = direction.normalized * _speed;
+			transform.position += _lastSpeed * Time.deltaTime;
+			transform.forward = _lastSpeed;
 		}
 		else
 		{
+			_lastSpeed = new Vector3(0, 0, 0);
 			if (_currentIndex == _path.Count)
 			{
 				PoolManager.Instance.Remove(gameObject);

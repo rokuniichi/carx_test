@@ -7,7 +7,7 @@ public class TowerManager : MonoBehaviour
     [SerializeField] private LayerMask _layerMask;
 
     private GameObject _currentBase;
-    private GameObject _currentWeapon;
+    private BaseTower _currentWeapon;
     private TowerData _currentData;
     public void SelectTower(TowerData towerData)
     {
@@ -15,7 +15,7 @@ public class TowerManager : MonoBehaviour
         GameObject towerWeapon = Instantiate(towerData.WeaponPrefab, towerBase.transform);
         towerWeapon.transform.localPosition = Vector3.zero + towerData.WeaponPlacementOffset;
         _currentBase = towerBase;
-        _currentWeapon = towerWeapon;
+        _currentWeapon = towerWeapon.GetComponent<BaseTower>();
         _currentData = towerData;
     }
 
@@ -31,7 +31,7 @@ public class TowerManager : MonoBehaviour
 
         if (KeyboardInput.LMBClick)
         {
-            _currentWeapon.GetComponent<BaseTower>().Init(_currentData);
+            _currentWeapon.Init(_currentData);
             _currentBase = null;
             _currentWeapon = null;
             _currentData = null;
