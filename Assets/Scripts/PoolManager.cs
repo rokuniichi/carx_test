@@ -1,28 +1,51 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public static class PoolManager
+public class PoolManager : MonoBehaviour
 {
-    private static Dictionary<string, Queue<GameObject>> GameObjects;
+    public static PoolManager Instance => _instance;
 
-    public static void Init()
+    private static PoolManager _instance;
+
+    private Dictionary<string, Queue<GameObject>> _pools;
+
+    private void Awake()
     {
-        GameObjects = new Dictionary<string, Queue<GameObject>>();
+        _instance = this;
+        _pools = new Dictionary<string, Queue<GameObject>>();
     }
 
-    public static void AddObjectIntoPool(string tag, GameObject obj)
+    public GameObject Create(GameObject prefab)
     {
-        if (GameObjects[tag] == null)
-            GameObjects[tag] = new Queue<GameObject>();
+        GameObject result = GetObjectFromPool(prefab.tag);
+        if (result == null)
+            result = Instantiate(prefab);
 
-        GameObjects[tag].Enqueue(obj);
+        result.SetActive(true);
+        return result;
     }
 
-    public static GameObject GetObjectFromPool(string tag)
+    public void Remove(GameObject obj)
     {
-        if (GameObjects[tag] == null || GameObjects[tag].Count == 0)
+        obj.SetActive(false);
+        AddObjectIntoPool(obj);
+    }
+
+    private void AddObjectIntoPool(GameObject obj)
+    {
+        if (!_pools.ContainsKey(obj.tag))
+        {
+            _pools[obj.tag] = new Queue<GameObject>();
+        }
+
+        _pools[obj.tag].Enqueue(obj);
+    }
+
+    private GameObject GetObjectFromPool(string objTag)
+    {
+        if (!_pools.ContainsKey(objTag) || _pools[objTag].Count == 0)
             return null;
 
-        return GameObjects[tag].Dequeue();
+        return _pools[objTag].Dequeue();
     }
 }
