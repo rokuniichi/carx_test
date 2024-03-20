@@ -2,7 +2,7 @@
 {
     protected override void Fire()
     {
-		GuidedProjectile projectile = SpawnProjectile() as GuidedProjectile;
+		GuidedProjectile projectile = ProjectileSpawner<GuidedProjectile>.SpawnProjectile(_projectileData, shootingPoint);
 		projectile.SetTarget(_currentTarget);
 	}
 }

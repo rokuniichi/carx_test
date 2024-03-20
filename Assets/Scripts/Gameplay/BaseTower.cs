@@ -29,16 +29,6 @@ public abstract class BaseTower : MonoBehaviour
 
 	protected abstract void Fire();
 
-	protected BaseProjectile SpawnProjectile()
-    {
-		GameObject obj = PoolManager.Instance.Create(_projectileData.Prefab);
-		obj.transform.position = shootingPoint.position;
-		obj.transform.rotation = shootingPoint.rotation;
-		BaseProjectile proj = obj.GetComponent<BaseProjectile>();
-		proj.Init(_projectileData);
-		return proj;
-	}
-
 	private void UpdateTarget()
     {
 		if (_currentTarget != null) return;

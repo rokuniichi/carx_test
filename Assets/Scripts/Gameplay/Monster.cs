@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-public class Monster : MonoBehaviour, IKillable, IDamagable, IPoolable, IPredictable {
+public class Monster : MonoBehaviour, IKillable, IDamagable, IPredictable {
 
 	public Action<Transform> OnKill { get; set; }
 	public Vector3 LastSpeed => _lastSpeed;
@@ -23,11 +23,6 @@ public class Monster : MonoBehaviour, IKillable, IDamagable, IPoolable, IPredict
     {
 		_monsterData = monsterData;
 		_path = path;
-		Reset();
-    }
-
-	public void Reset()
-	{
 		_currentIndex = 0;
 		_health = _monsterData.MaxHealth;
 		_speed = _monsterData.Speed;

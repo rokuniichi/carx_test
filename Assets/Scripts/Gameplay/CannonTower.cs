@@ -1,12 +1,15 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public class CannonTower : BaseTower {
-    [SerializeField] protected GameObject cannon;
+    [SerializeField] private float rotationSpeed;
+    [SerializeField] protected Transform cannonBody;
+    [SerializeField] protected Transform cannonBase;
+
     protected override void Fire()
     {
-        Vector3 targetPoint = GetHitPoint(_currentTarget.transform.position, _currentTarget.GetComponent<IPredictable>().LastSpeed, shootingPoint.transform.position, _projectileData.Speed);
-        cannon.transform.LookAt(targetPoint);
-        SpawnProjectile();
+        ProjectileSpawner<CannonProjectile>.SpawnProjectile(_projectileData, shootingPoint);
+        StartCoroutine(RotationRoutine());
     }
 
     // Solution by AntonVelmozhniy @ https://github.com/AntonVelmozhniy
@@ -22,5 +25,26 @@ public class CannonTower : BaseTower {
         float time = Mathf.Max(t1, t2);
         Vector3 result = targetPosition + targetSpeed * time;
         return result;
+    }
+
+    IEnumerator RotationRoutine()
+    {
+        while (_currentTarget != null)
+        {
+            Vector3 targetPoint = GetHitPoint(_currentTarget.transform.position, _currentTarget.GetComponent<IPredictable>().LastSpeed, shootingPoint.transform.position, _projectileData.Speed);
+
+            Vector3 baseDirection = (targetPoint - cannonBase.position).normalized;
+            Quaternion baseLook = Quaternion.LookRotation(baseDirection);
+            baseLook.x = cannonBase.localRotation.x;
+            baseLook.z = cannonBase.localRotation.z;
+            cannonBase.localRotation = Quaternion.RotateTowards(cannonBase.localRotation, baseLook, Time.deltaTime * rotationSpeed);
+
+            Vector3 bodyDirection = (targetPoint - cannonBody.position).normalized;
+            Quaternion bodyLook = Quaternion.LookRotation(bodyDirection);
+            bodyLook.y = cannonBody.localRotation.y;
+            bodyLook.z = cannonBody.localRotation.z;
+            cannonBody.localRotation = Quaternion.RotateTowards(cannonBody.localRotation, bodyLook, Time.deltaTime * rotationSpeed);
+            yield return new WaitForEndOfFrame();
+        }
     }
 }
