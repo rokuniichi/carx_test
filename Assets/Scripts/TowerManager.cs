@@ -2,8 +2,6 @@
 
 public class TowerManager : MonoBehaviour
 {
-    [SerializeField] private GridManager gridManager;
-
     private GameObject currentPlacement;
     // Start is called before the first frame update
     void Start()
@@ -14,8 +12,7 @@ public class TowerManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (currentPlacement != null)
-            gridManager.ProjectOntoSelectedCell(currentPlacement);
+        if (currentPlacement != null) { }
     }
 
     public void SelectTowerToPlace(TowerData towerData)
