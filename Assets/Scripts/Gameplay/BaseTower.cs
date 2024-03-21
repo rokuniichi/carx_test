@@ -39,8 +39,11 @@ public abstract class BaseTower : MonoBehaviour
         foreach (Transform target in _allTargets)
         {
 			float distance = Vector3.Distance(transform.position, target.position);
-			if (distance <= currentDistance) 
+			if (distance <= currentDistance)
+            {
 				result = target;
+				currentDistance = distance;
+			}
         }
 
 		SetTarget(result);
@@ -66,11 +69,17 @@ public abstract class BaseTower : MonoBehaviour
 		_allTargets.Remove(target);
 		if (_currentTarget == target)
 		{
-			SetTarget(null);
+			_currentTarget = null;
 			UpdateTarget();
 		}
 
 		target.GetComponent<IKillable>().OnKill -= RemoveTarget;
+	}
+
+	private bool CheckTargetLayer(int layer)
+    {
+		return _towerData.TargetLayers.value == (_towerData.TargetLayers.value | (1 << layer));
+
 	}
 
 	private void Update()
@@ -87,14 +96,14 @@ public abstract class BaseTower : MonoBehaviour
 	private void OnTriggerEnter(Collider other)
 	{
 		if (!_isInit) return;
-		if (_towerData.TargetLayers.value != (_towerData.TargetLayers.value | (1 << other.gameObject.layer))) return;
+		if (!CheckTargetLayer(other.gameObject.layer)) return;
 		AddTarget(other.transform);
     }
 
     private void OnTriggerExit(Collider other)
     {
 		if (!_isInit) return;
-		if (_towerData.TargetLayers != (_towerData.TargetLayers | (1 << other.gameObject.layer))) return;
+		if (!CheckTargetLayer(other.gameObject.layer)) return;
 		RemoveTarget(other.transform);
     } 
 }
