@@ -4,6 +4,5 @@ using UnityEngine;
 
 public interface IProjectileSpawner
 {
-    void Init(ProjectileData projectileData, Transform spawnLocation);
     void SpawnProjectile();
 }

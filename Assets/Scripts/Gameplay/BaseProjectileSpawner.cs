@@ -1,16 +1,16 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
 
-public abstract class BaseProjectileSpawner : MonoBehaviour, IProjectileSpawner
+public abstract class BaseProjectileSpawner : MonoBehaviour, IProjectileSpawner, ITowerSystem
 {
-    [SerializeField] protected ProjectileData projectileData;
-    [SerializeField] protected Transform spawnLocation;
+    [SerializeField] protected Transform shootingPoint;
     [SerializeField] protected UnityEvent onProjectileSpawned;
 
-    public void Init(ProjectileData newProjectileData, Transform newSpawnLocation)
+    protected ProjectileData projectileData;
+
+    public void Init(TowerData towerData)
     {
-        projectileData = newProjectileData;
-        spawnLocation = newSpawnLocation;
+        projectileData = towerData.ProjectileData;
     }
 
     public abstract void SpawnProjectile();

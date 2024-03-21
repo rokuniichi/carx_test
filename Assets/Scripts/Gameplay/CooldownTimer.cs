@@ -1,13 +1,19 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
 
-public class TimerBehaviour : MonoBehaviour
+public class CooldownTimer : MonoBehaviour, ITowerSystem
 {
-    [SerializeField] private float duration;
     [SerializeField] private UnityEvent onTimerStart;
     [SerializeField] private UnityEvent onTimerEnd;
 
+    private float _duration;
+
     private Timer _timer;
+
+    public void Init(TowerData towerData)
+    {
+        _duration = towerData.Cooldown;
+    }
 
     private void Start()
     {
@@ -17,17 +23,17 @@ public class TimerBehaviour : MonoBehaviour
 
     public void SetDuration(float newDuration)
     {
-        duration = newDuration;
+        _duration = newDuration;
     }
 
     public float GetDuration()
     {
-        return duration;
+        return _duration;
     }
 
     public void StartTimer()
     {
-        _timer.Start(duration);
+        _timer.Start(_duration);
         onTimerStart?.Invoke();
     }
 

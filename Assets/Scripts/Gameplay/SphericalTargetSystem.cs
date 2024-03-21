@@ -2,22 +2,20 @@
 using UnityEngine;
 
 [RequireComponent(typeof(SphereCollider))]
-public class SphericalTargetSystem : MonoBehaviour, ITargetSystem
+public class SphericalTargetSystem : MonoBehaviour, ITowerSystem
 {
-	[SerializeField] private float radius;
-	[SerializeField] private LayerMask layerMask;
 	[SerializeField] private OnTargetSetEvent onTargetSet;
 
+	private LayerMask _layerMask;
 	private SphereCollider _sphereCollider;
 	private Transform _currentTarget;
 	private HashSet<Transform> _allTargets;
 
-	public void Init(float newRadius, LayerMask newLayerMask)
+	public void Init(TowerData towerData)
     {
-		radius = newRadius;
-		layerMask = newLayerMask;
+		_layerMask = towerData.TargetLayers;
 		_sphereCollider = GetComponent<SphereCollider>();
-		_sphereCollider.radius = newRadius;
+		_sphereCollider.radius = towerData.Range;
 		_allTargets = new HashSet<Transform>();
 		Collider[] collidersInRadius = Physics.OverlapSphere(_sphereCollider.transform.position, _sphereCollider.radius);
 		foreach (Collider collider in collidersInRadius)
@@ -74,7 +72,7 @@ public class SphericalTargetSystem : MonoBehaviour, ITargetSystem
 
 	private bool CheckTargetLayer(int layer)
 	{
-		return layerMask.value == (layerMask.value | (1 << layer));
+		return _layerMask.value == (_layerMask.value | (1 << layer));
 	}
 
 	private void OnTriggerEnter(Collider other)

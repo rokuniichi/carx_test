@@ -4,7 +4,7 @@ public class CannonProjectileSpawner : BaseProjectileSpawner
 {
     public override void SpawnProjectile()
     {
-        ProjectileFactory<CannonProjectile>.CreateProjectileOfType(projectileData, spawnLocation);
+        ProjectileFactory<CannonProjectile>.CreateProjectileOfType(projectileData, shootingPoint);
         onProjectileSpawned?.Invoke();
     }
 }

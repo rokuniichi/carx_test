@@ -12,7 +12,7 @@ public class GuidedProjectileSpawner : BaseProjectileSpawner
     public override void SpawnProjectile()
     {
         if (_target == null) return;
-        GuidedProjectile proj = ProjectileFactory<GuidedProjectile>.CreateProjectileOfType(projectileData, spawnLocation);
+        GuidedProjectile proj = ProjectileFactory<GuidedProjectile>.CreateProjectileOfType(projectileData, shootingPoint);
         proj.SetTarget(_target);
         onProjectileSpawned?.Invoke();
     }

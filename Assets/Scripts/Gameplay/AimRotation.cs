@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class AimRotation : MonoBehaviour
+public class AimRotation : MonoBehaviour, ITowerSystem
 {
     [Serializable]
     public class RotationTarget
@@ -15,13 +15,18 @@ public class AimRotation : MonoBehaviour
         [SerializeField] public bool lockZ;
     }
 
-    [SerializeField] private Tower tower;
-    [SerializeField] List<RotationTarget> rotationTargets;
     [SerializeField] private Transform shootingPoint;
-    [SerializeField] private UnityEvent onAim;
     [SerializeField] private float accuracyMargin;
+    [SerializeField] List<RotationTarget> rotationTargets;
+    [SerializeField] private UnityEvent onAim;
 
     private Transform _currentTarget;
+    private float _projectileSpeed;
+
+    public void Init(TowerData towerData)
+    {
+        _projectileSpeed = towerData.ProjectileData.Speed;
+    }
 
     public void SetAim(Transform target)
     {
@@ -47,7 +52,7 @@ public class AimRotation : MonoBehaviour
     {
         if (_currentTarget == null) return;
         float time = 0f;
-        Vector3 targetPoint = GetHitPoint(_currentTarget.position, _currentTarget.GetComponent<IPredictable>().LastSpeed, shootingPoint.position, tower.ProjectileData.Speed, out time);
+        Vector3 targetPoint = GetHitPoint(_currentTarget.position, _currentTarget.GetComponent<IPredictable>().LastSpeed, shootingPoint.position, _projectileSpeed, out time);
         foreach (RotationTarget rotationTarget in rotationTargets)
         {
             Vector3 baseDirection = (targetPoint - rotationTarget.transform.position).normalized;
@@ -58,7 +63,7 @@ public class AimRotation : MonoBehaviour
             rotationTarget.transform.localRotation = Quaternion.RotateTowards(rotationTarget.transform.localRotation, lookRotation, Time.deltaTime * rotationTarget.rotationSpeed);
         }
        
-        float distance = Vector3.Distance(shootingPoint.position + shootingPoint.forward * tower.ProjectileData.Speed * time, targetPoint);
+        float distance = Vector3.Distance(shootingPoint.position + shootingPoint.forward * _projectileSpeed * time, targetPoint);
         if (distance < accuracyMargin)
             onAim?.Invoke();
     }
