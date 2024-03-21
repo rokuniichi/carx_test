@@ -12,5 +12,5 @@ public class TowerData : ScriptableObject
     [Header("Stats")]
     [SerializeField] public float Cooldown;
     [SerializeField] public float Range;
-    [SerializeField] public LayerMask TargetLayer;
+    [SerializeField] public LayerMask TargetLayers;
 }

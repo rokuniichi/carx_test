@@ -87,14 +87,14 @@ public abstract class BaseTower : MonoBehaviour
 	private void OnTriggerEnter(Collider other)
 	{
 		if (!_isInit) return;
-		if (other.gameObject.layer != _towerData.TargetLayer) return;
+		if (_towerData.TargetLayers.value != (_towerData.TargetLayers.value | (1 << other.gameObject.layer))) return;
 		AddTarget(other.transform);
     }
 
     private void OnTriggerExit(Collider other)
     {
 		if (!_isInit) return;
-		if (other.gameObject.layer != _towerData.TargetLayer) return;
+		if (_towerData.TargetLayers != (_towerData.TargetLayers | (1 << other.gameObject.layer))) return;
 		RemoveTarget(other.transform);
     } 
 }
