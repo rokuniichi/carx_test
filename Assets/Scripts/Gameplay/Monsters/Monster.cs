@@ -14,6 +14,7 @@ public class Monster : MonoBehaviour, IKillable, IDamagable, IPredictable {
 	private float _speed;
 
 	private Vector3 _velocity;
+	private Vector3 _direction => _moveTarget.transform.position - transform.position;
 
 	private Transform _moveTarget;
 
@@ -43,16 +44,22 @@ public class Monster : MonoBehaviour, IKillable, IDamagable, IPredictable {
 			KillSelf();
 		}
 	}
-	
+
+	// TODO: Translate to path
+	public Vector3 GetPositionInTime(float time)
+	{
+		return transform.position + _velocity * time;
+	}
+
+
 	private void Update()
 	{
 		if (_moveTarget == null)
 			return;
 
-		Vector3 direction = _moveTarget.transform.position - transform.position;
+		_velocity = _direction.normalized * _speed;
 		float frameDistance = _speed * Time.deltaTime;
-		_velocity = direction.normalized * _speed;
-		if (direction.magnitude > frameDistance)
+		if (_direction.magnitude > frameDistance)
 		{
 			transform.position += _velocity * Time.deltaTime;
 			transform.forward = _velocity;

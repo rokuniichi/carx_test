@@ -34,27 +34,28 @@ public class AimRotation : MonoBehaviour, ITowerSystem
     }
 
     // Solution by AntonVelmozhniy @ https://github.com/AntonVelmozhniy
-    private Vector3 GetHitPoint(Vector3 targetPosition, Vector3 targetSpeed, Vector3 attackerPosition, float projectileSpeed, out float time)
+    private float GetTimeToHit(Vector3 targetPosition, Vector3 targetVelocity, Vector3 attackerPosition, float projectileSpeed)
     {
         Vector3 direction = targetPosition - attackerPosition;
         direction.y = 0;
-        targetSpeed.y = 0;
-        float a = Vector3.Dot(targetSpeed, targetSpeed) - (projectileSpeed * projectileSpeed);
-        float b = 2 * Vector3.Dot(targetSpeed, direction); 
+        targetVelocity.y = 0;
+        float a = Vector3.Dot(targetVelocity, targetVelocity) - (projectileSpeed * projectileSpeed);
+        float b = 2 * Vector3.Dot(targetVelocity, direction); 
         float c = Vector3.Dot(direction, direction); 
         float D = Mathf.Sqrt((b * b) - 4 * a * c);
         float t1 = (-b + D) / (2 * a);
         float t2 = (-b - D) / (2 * a);
-        time = Mathf.Max(t1, t2);
-        Vector3 result = targetPosition + targetSpeed * time;
-        return result;
+        float time = Mathf.Max(t1, t2);
+        return time;
     }
 
     private void LateUpdate()
     {
         if (_currentTarget == null) return;
-        float time = 0;
-        Vector3 hitPoint = GetHitPoint(_currentTarget.position, _currentTarget.GetComponent<IPredictable>().Velocity, shootingPoint.position, _projectileSpeed, out time);
+        IPredictable targetPrediction = _currentTarget.GetComponent<IPredictable>();
+        if (targetPrediction == null) return;
+        float time = GetTimeToHit(_currentTarget.position, targetPrediction.Velocity, shootingPoint.position, _projectileSpeed);
+        Vector3 hitPoint = targetPrediction.GetPositionInTime(time);
         Vector3 projectedDirection = hitPoint - transform.position;
         projectedDirection.y = 0;
         float antiGravity = -Physics.gravity.y * time / 2;
@@ -67,8 +68,7 @@ public class AimRotation : MonoBehaviour, ITowerSystem
             lookRotation.x = rotationTarget.lockX ? rotationTarget.transform.localRotation.x : lookRotation.x;
             lookRotation.y = rotationTarget.lockY ? rotationTarget.transform.localRotation.y : lookRotation.y;
             lookRotation.z = rotationTarget.lockZ ? rotationTarget.transform.localRotation.z : lookRotation.z;
-            //rotationTarget.transform.localRotation = Quaternion.RotateTowards(rotationTarget.transform.localRotation, lookRotation, Time.deltaTime * rotationTarget.rotationSpeed);
-            rotationTarget.transform.localRotation = lookRotation;
+            rotationTarget.transform.localRotation = Quaternion.RotateTowards(rotationTarget.transform.localRotation, lookRotation, Time.deltaTime * rotationTarget.rotationSpeed);
         }
 
         Vector3 currentDirection = shootingPoint.forward;
@@ -77,8 +77,6 @@ public class AimRotation : MonoBehaviour, ITowerSystem
         currentVelocity.y = antiGravity + deltaY;
 
         float difference = Vector3.Distance(currentVelocity, projectedVelocity);
-        Debug.DrawLine(shootingPoint.position, currentVelocity, Color.blue);
-        Debug.DrawLine(shootingPoint.position, projectedVelocity, Color.red);
         if (difference < accuracyMargin)
             onAim?.Invoke(currentVelocity);
     }
