@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class TowerManager : MonoBehaviour
+public class TowerSpawner : MonoBehaviour
 {
     // Spaghetti class for prototyping/debugging
     [SerializeField] Camera _mainCamera;

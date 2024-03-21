@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public class MonsterManager : MonoBehaviour {
+public class MonsterSpawner : MonoBehaviour {
 	[SerializeField] private float interval;
 	[SerializeField] private List<Transform> path;
 

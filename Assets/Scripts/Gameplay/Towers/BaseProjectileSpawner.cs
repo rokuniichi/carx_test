@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
 
-public abstract class BaseProjectileSpawner : MonoBehaviour, IProjectileSpawner, ITowerSystem
+public abstract class BaseProjectileSpawner : MonoBehaviour, ITowerSystem
 {
     [SerializeField] protected Transform shootingPoint;
     [SerializeField] protected UnityEvent onProjectileSpawned;

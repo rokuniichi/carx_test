@@ -4,7 +4,7 @@ using UnityEngine;
 [RequireComponent(typeof(SphereCollider))]
 public class SphericalTargetSystem : MonoBehaviour, ITowerSystem
 {
-	[SerializeField] private OnTargetSetEvent onTargetSet;
+	[SerializeField] private OnSetTarget onSetTarget;
 
 	private LayerMask _layerMask;
 	private SphereCollider _sphereCollider;
@@ -46,7 +46,7 @@ public class SphericalTargetSystem : MonoBehaviour, ITowerSystem
 	private void SetTarget(Transform target)
 	{
 		_currentTarget = target;
-		onTargetSet?.Invoke(target);
+		onSetTarget?.Invoke(target);
 	}
 
 	private void AddTarget(Transform target)

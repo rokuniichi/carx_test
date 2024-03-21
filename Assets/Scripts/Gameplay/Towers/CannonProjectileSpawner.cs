@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-public class CannonProjectileSpawner : BaseProjectileSpawner
+﻿public class CannonProjectileSpawner : BaseProjectileSpawner
 {
     public override void SpawnProjectile()
     {
