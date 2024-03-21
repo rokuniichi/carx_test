@@ -16,6 +16,7 @@ public class TowerManager : MonoBehaviour
         towerWeapon.transform.localPosition = Vector3.zero + towerData.WeaponPlacementOffset;
         _currentBase = towerBase;
         _currentWeapon = towerWeapon.GetComponent<BaseTower>();
+        towerWeapon.GetComponent<SphereCollider>().enabled = false;
         _currentData = towerData;
     }
 
@@ -31,6 +32,7 @@ public class TowerManager : MonoBehaviour
 
         if (KeyboardInput.LMBClick)
         {
+            _currentWeapon.GetComponent<SphereCollider>().enabled = true;
             _currentWeapon.Init(_currentData);
             _currentBase = null;
             _currentWeapon = null;

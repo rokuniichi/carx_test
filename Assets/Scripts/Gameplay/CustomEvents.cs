@@ -2,5 +2,5 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-[Serializable] 
-public class AimRotationEvent : UnityEvent<Transform, float> { }
+[Serializable]
+public class OnTargetSetEvent : UnityEvent<Transform> { }

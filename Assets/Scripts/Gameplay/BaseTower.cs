@@ -2,108 +2,48 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-[RequireComponent(typeof(SphereCollider))]
+[RequireComponent(typeof(ITargetSystem))]
 public abstract class BaseTower : MonoBehaviour 
 {
 	[SerializeField] protected Transform shootingPoint;
+	[SerializeField] private TimerBehaviour cooldownTimer;
+	[SerializeField] private UnityEvent onFire;
+
+	public ProjectileData ProjectileData => _towerData.ProjectileData;
 
 	protected Transform _currentTarget;
-	protected ProjectileData _projectileData;
 
 	private TowerData          _towerData;
-	private SphereCollider     _collider;
-	private Timer              _cooldownTimer;
-	private HashSet<Transform> _allTargets;
+	private ITargetSystem      _targetSystem;
 
-	private bool _isInit;
+	private bool _onCooldown;
 
-	public void Init(TowerData towerData)
+    private void Start()
+    {
+		_targetSystem = GetComponent<ITargetSystem>();
+    }
+
+    public void Init(TowerData towerData)
     {
 		_towerData = towerData;
-		_projectileData = _towerData.ProjectileData;
-		_collider = GetComponent<SphereCollider>();
-		_collider.radius = _towerData.Range;
-		_cooldownTimer = new Timer();
-		_allTargets = new HashSet<Transform>();
-		_isInit = true;
+		_onCooldown = false;
+
+		_targetSystem.Init(_towerData.Range, _towerData.TargetLayers);
+
+		cooldownTimer.SetDuration(_towerData.Cooldown);
 	}
 
-	protected abstract void Fire();
-	protected abstract void OnSetTarget();
-
-	private void UpdateTarget()
+	public void SetCooldown(bool state)
     {
-		if (_currentTarget != null) return;
-		float currentDistance = _towerData.Range;
-		Transform result = null;
-        foreach (Transform target in _allTargets)
-        {
-			float distance = Vector3.Distance(transform.position, target.position);
-			if (distance <= currentDistance)
-            {
-				result = target;
-				currentDistance = distance;
-			}
-        }
-
-		SetTarget(result);
+		_onCooldown = state;
     }
 
-	private void SetTarget(Transform target)
-    {
-		_currentTarget = target;
-		OnSetTarget();
-    }
+	protected abstract void OnFire();
 
-	private void AddTarget(Transform target)
-    {
-		_allTargets.Add(target);
-		if (_currentTarget == null)
-			UpdateTarget();
-
-		target.GetComponent<IKillable>().OnKill += RemoveTarget;
-	}
-
-	private void RemoveTarget(Transform target)
-    {
-		_allTargets.Remove(target);
-		if (_currentTarget == target)
-		{
-			_currentTarget = null;
-			UpdateTarget();
-		}
-
-		target.GetComponent<IKillable>().OnKill -= RemoveTarget;
-	}
-
-	private bool CheckTargetLayer(int layer)
-    {
-		return _towerData.TargetLayers.value == (_towerData.TargetLayers.value | (1 << layer));
-
-	}
-
-	private void Update()
+	public void TryFire()
 	{
-		if (!_isInit) return;
-		_cooldownTimer.Tick(Time.deltaTime);
-		if (_cooldownTimer.CurrentDuration <= 0f && _currentTarget != null)
-		{
-			Fire();
-			_cooldownTimer.Start(_towerData.Cooldown);
-		}
+		if (_onCooldown) return;
+		OnFire();
+		onFire?.Invoke();
 	}
-
-	private void OnTriggerEnter(Collider other)
-	{
-		if (!_isInit) return;
-		if (!CheckTargetLayer(other.gameObject.layer)) return;
-		AddTarget(other.transform);
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-		if (!_isInit) return;
-		if (!CheckTargetLayer(other.gameObject.layer)) return;
-		RemoveTarget(other.transform);
-    } 
 }

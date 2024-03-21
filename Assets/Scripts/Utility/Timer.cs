@@ -6,11 +6,9 @@ public class Timer
 
     public float CurrentDuration { get; private set; }
 
-    private float _initialDuration;
-
     public void Start(float duration)
     {
-        CurrentDuration = _initialDuration = duration;
+        CurrentDuration = duration;
     } 
 
     public void Tick(float deltaTime)

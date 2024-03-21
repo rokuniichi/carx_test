@@ -10,7 +10,7 @@ public class MonsterManager : MonoBehaviour {
 
 	private Timer _timer;
 
-    private void Awake()
+    private void Start()
     {
 		_timer = new Timer();
     }

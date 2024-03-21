@@ -1,12 +1,8 @@
 ﻿public class GuidedTower : BaseTower
 {
-    protected override void Fire()
+    protected override void OnFire()
     {
-		GuidedProjectile projectile = ProjectileSpawner<GuidedProjectile>.SpawnProjectile(_projectileData, shootingPoint);
+		GuidedProjectile projectile = ProjectileSpawner<GuidedProjectile>.SpawnProjectile(ProjectileData, shootingPoint);
 		projectile.SetTarget(_currentTarget);
 	}
-
-    protected override void OnSetTarget()
-    {
-    }
 }
