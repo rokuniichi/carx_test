@@ -12,8 +12,8 @@ public class GuidedProjectile : BaseProjectile {
 	private void SelfRemove(Transform target)
     {
 		if (_target != target) return;
-		PoolManager.Instance.Remove(gameObject);
 		_target.GetComponent<IKillable>().OnKill -= SelfRemove;
+		SelfRemove();
 	}
 
     void Update () {

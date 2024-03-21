@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class BaseProjectile : MonoBehaviour
+public  class BaseProjectile : MonoBehaviour
 {
     protected float _speed;
     protected float _damage;
@@ -9,6 +9,11 @@ public class BaseProjectile : MonoBehaviour
     {
         _speed = projectileData.Speed;
         _damage = projectileData.Damage;
+    }
+
+    public void SelfRemove()
+    {
+        PoolManager.Instance.Remove(gameObject);
     }
 
     private void OnTriggerEnter(Collider other)
