@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 [RequireComponent(typeof(SphereCollider))]
 public abstract class BaseTower : MonoBehaviour 
@@ -28,6 +29,7 @@ public abstract class BaseTower : MonoBehaviour
 	}
 
 	protected abstract void Fire();
+	protected abstract void OnSetTarget();
 
 	private void UpdateTarget()
     {
@@ -41,14 +43,20 @@ public abstract class BaseTower : MonoBehaviour
 				result = target;
         }
 
-		_currentTarget = result;
+		SetTarget(result);
+    }
+
+	private void SetTarget(Transform target)
+    {
+		_currentTarget = target;
+		OnSetTarget();
     }
 
 	private void AddTarget(Transform target)
     {
-		if (_currentTarget == null)
-			_currentTarget = target;
 		_allTargets.Add(target);
+		if (_currentTarget == null)
+			UpdateTarget();
 
 		target.GetComponent<IKillable>().OnKill += RemoveTarget;
 	}
@@ -58,7 +66,7 @@ public abstract class BaseTower : MonoBehaviour
 		_allTargets.Remove(target);
 		if (_currentTarget == target)
 		{
-			_currentTarget = null;
+			SetTarget(null);
 			UpdateTarget();
 		}
 

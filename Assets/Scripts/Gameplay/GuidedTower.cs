@@ -5,4 +5,8 @@
 		GuidedProjectile projectile = ProjectileSpawner<GuidedProjectile>.SpawnProjectile(_projectileData, shootingPoint);
 		projectile.SetTarget(_currentTarget);
 	}
+
+    protected override void OnSetTarget()
+    {
+    }
 }
