@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Events;
 
-[RequireComponent(typeof(ITargetSystem))]
-public abstract class BaseTower : MonoBehaviour 
+[RequireComponent(typeof(ITargetSystem), typeof(IProjectileSpawner))]
+public class Tower : MonoBehaviour 
 {
 	[SerializeField] protected Transform shootingPoint;
 	[SerializeField] private TimerBehaviour cooldownTimer;
@@ -15,12 +14,14 @@ public abstract class BaseTower : MonoBehaviour
 
 	private TowerData          _towerData;
 	private ITargetSystem      _targetSystem;
+	private IProjectileSpawner _projectileSpawner;
 
 	private bool _onCooldown;
 
     private void Start()
     {
 		_targetSystem = GetComponent<ITargetSystem>();
+		_projectileSpawner = GetComponent<IProjectileSpawner>();
     }
 
     public void Init(TowerData towerData)
@@ -28,6 +29,7 @@ public abstract class BaseTower : MonoBehaviour
 		_towerData = towerData;
 		_onCooldown = false;
 
+		_projectileSpawner.Init(_towerData.ProjectileData, shootingPoint);
 		_targetSystem.Init(_towerData.Range, _towerData.TargetLayers);
 
 		cooldownTimer.SetDuration(_towerData.Cooldown);
@@ -38,12 +40,9 @@ public abstract class BaseTower : MonoBehaviour
 		_onCooldown = state;
     }
 
-	protected abstract void OnFire();
-
 	public void TryFire()
 	{
 		if (_onCooldown) return;
-		OnFire();
 		onFire?.Invoke();
 	}
 }

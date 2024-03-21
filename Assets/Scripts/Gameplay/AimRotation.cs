@@ -15,7 +15,7 @@ public class AimRotation : MonoBehaviour
         [SerializeField] public bool lockZ;
     }
 
-    [SerializeField] private BaseTower tower;
+    [SerializeField] private Tower tower;
     [SerializeField] List<RotationTarget> rotationTargets;
     [SerializeField] private Transform shootingPoint;
     [SerializeField] private UnityEvent onAim;
@@ -58,7 +58,7 @@ public class AimRotation : MonoBehaviour
             rotationTarget.transform.localRotation = Quaternion.RotateTowards(rotationTarget.transform.localRotation, lookRotation, Time.deltaTime * rotationTarget.rotationSpeed);
         }
        
-        float distance = Vector3.Distance(shootingPoint.position + shootingPoint.forward * tower.ProjectileData.Speed * time, _currentTarget.position);
+        float distance = Vector3.Distance(shootingPoint.position + shootingPoint.forward * tower.ProjectileData.Speed * time, targetPoint);
         if (distance < accuracyMargin)
             onAim?.Invoke();
     }

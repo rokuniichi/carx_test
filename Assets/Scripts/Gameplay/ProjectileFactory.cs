@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 
-public static class ProjectileSpawner<T> where T : BaseProjectile
+public static class ProjectileFactory<T> where T : BaseProjectile
 {
-    public static T SpawnProjectile(ProjectileData projectileData, Transform parent)
+    public static T CreateProjectileOfType(ProjectileData projectileData, Transform parent)
     {
         GameObject obj = PoolManager.Instance.Create(projectileData.Prefab);
         obj.transform.position = parent.position;

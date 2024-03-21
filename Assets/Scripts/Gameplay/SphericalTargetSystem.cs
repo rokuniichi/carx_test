@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
 [RequireComponent(typeof(SphereCollider))]
 public class SphericalTargetSystem : MonoBehaviour, ITargetSystem
@@ -31,11 +30,11 @@ public class SphericalTargetSystem : MonoBehaviour, ITargetSystem
 	private void UpdateTarget()
 	{
 		if (_currentTarget != null) return;
-		float currentDistance = radius;
+		float currentDistance = float.MaxValue;
 		Transform result = null;
 		foreach (Transform target in _allTargets)
 		{
-			float distance = Vector3.Distance(transform.position, target.position);
+			float distance = Vector3.Distance(transform.position + _sphereCollider.center, target.position);
 			if (distance <= currentDistance)
 			{
 				result = target;
