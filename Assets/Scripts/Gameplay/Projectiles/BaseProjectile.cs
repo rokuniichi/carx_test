@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.Events;
 
 public class BaseProjectile : MonoBehaviour
 {
@@ -20,9 +19,10 @@ public class BaseProjectile : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         IDamagable obj = other.GetComponent<IDamagable>();
-        if (obj == null) return;
-
-        obj.ReceiveDamage(damage);
-        SelfRemove();
+        if (obj != null)
+        {
+            obj.ReceiveDamage(damage);
+            SelfRemove();
+        }
     }
 }
