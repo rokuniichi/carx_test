@@ -2,5 +2,5 @@
 
 internal interface IPredictable
 { 
-    Vector3 LastSpeed { get; }
+    Vector3 Velocity { get; }
 }

@@ -19,7 +19,7 @@ public class GuidedProjectile : BaseProjectile {
     void Update () {
 		if (_target == null) return;
 		Vector3 translation = _target.transform.position - transform.position;
-		float frameDistance = _speed * Time.deltaTime;
+		float frameDistance = speed * Time.deltaTime;
 		if (translation.magnitude > frameDistance) {
 			transform.Translate(translation.normalized * frameDistance);
 		}

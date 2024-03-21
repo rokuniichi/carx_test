@@ -7,3 +7,5 @@ using UnityEngine.Events;
 public class OnTowerInit : UnityEvent<TowerData> { }
 [Serializable]
 public class OnSetTarget : UnityEvent<Transform> { }
+[Serializable]
+public class OnCannonAim : UnityEvent<Vector3> { }

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class Monster : MonoBehaviour, IKillable, IDamagable, IPredictable {
 
 	public Action<Transform> OnKill { get; set; }
-	public Vector3 LastSpeed => _lastSpeed;
+	public Vector3 Velocity => _velocity;
 
 	private MonsterData _monsterData;
 	private List<Transform> _path;
@@ -13,7 +13,7 @@ public class Monster : MonoBehaviour, IKillable, IDamagable, IPredictable {
 	private float _health;
 	private float _speed;
 
-	private Vector3 _lastSpeed;
+	private Vector3 _velocity;
 
 	private Transform _moveTarget;
 
@@ -51,25 +51,24 @@ public class Monster : MonoBehaviour, IKillable, IDamagable, IPredictable {
 
 		Vector3 direction = _moveTarget.transform.position - transform.position;
 		float frameDistance = _speed * Time.deltaTime;
+		_velocity = direction.normalized * _speed;
 		if (direction.magnitude > frameDistance)
 		{
-			_lastSpeed = direction.normalized * _speed;
-			transform.position += _lastSpeed * Time.deltaTime;
-			transform.forward = _lastSpeed;
+			transform.position += _velocity * Time.deltaTime;
+			transform.forward = _velocity;
 		}
 		else
 		{
-			_lastSpeed = new Vector3(0, 0, 0);
 			if (_currentIndex == _path.Count)
 			{
 				KillSelf();
 				return;
 			}
 			else
-			{
+            {
 				_moveTarget = _path[_currentIndex++];
 			}
+				
 		}
-
 	}
 }
