@@ -62,7 +62,7 @@ public class Monster : MonoBehaviour, IKillable, IDamagable, IPredictable {
 			_lastSpeed = new Vector3(0, 0, 0);
 			if (_currentIndex == _path.Count)
 			{
-				PoolManager.Instance.Remove(gameObject);
+				KillSelf();
 				return;
 			}
 			else
