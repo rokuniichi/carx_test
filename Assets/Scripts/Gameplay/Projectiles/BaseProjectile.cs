@@ -1,7 +1,10 @@
 ﻿using UnityEngine;
+using UnityEngine.Events;
 
 public class BaseProjectile : MonoBehaviour
 {
+    [SerializeField] protected UnityEvent onSelfRemove;
+
     protected float speed;
     protected float damage;
 
@@ -11,8 +14,9 @@ public class BaseProjectile : MonoBehaviour
         damage = projectileData.Damage;
     }
 
-    public void SelfRemove()
+    public virtual void SelfRemove()
     {
+        onSelfRemove?.Invoke();
         PoolManager.Instance.Remove(gameObject);
     }
 
