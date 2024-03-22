@@ -56,7 +56,7 @@ public class AimRotation : MonoBehaviour, ITowerSystem
         if (targetPrediction == null) return;
         float time = GetTimeToHit(_currentTarget.position, targetPrediction.Velocity, shootingPoint.position, _projectileSpeed);
         Vector3 hitPoint = targetPrediction.GetPositionInTime(time);
-        Vector3 projectedDirection = hitPoint - transform.position;
+        Vector3 projectedDirection = hitPoint - shootingPoint.position;
         projectedDirection.y = 0;
         float antiGravity = -Physics.gravity.y * time / 2;
         float deltaY = (hitPoint.y - shootingPoint.position.y) / time;
@@ -78,6 +78,6 @@ public class AimRotation : MonoBehaviour, ITowerSystem
 
         float difference = Vector3.Distance(currentVelocity, projectedVelocity);
         if (difference < accuracyMargin)
-            onAim?.Invoke(currentVelocity);
+            onAim?.Invoke(projectedVelocity);
     }
 }
