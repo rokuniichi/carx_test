@@ -68,16 +68,15 @@ public class AimRotation : MonoBehaviour, ITowerSystem
             lookRotation.x = rotationTarget.lockX ? rotationTarget.transform.localRotation.x : lookRotation.x;
             lookRotation.y = rotationTarget.lockY ? rotationTarget.transform.localRotation.y : lookRotation.y;
             lookRotation.z = rotationTarget.lockZ ? rotationTarget.transform.localRotation.z : lookRotation.z;
-            rotationTarget.transform.localRotation = Quaternion.RotateTowards(rotationTarget.transform.localRotation, lookRotation, Time.deltaTime * rotationTarget.rotationSpeed);
+            rotationTarget.transform.localRotation = Quaternion.Slerp(rotationTarget.transform.localRotation, lookRotation, Time.deltaTime * rotationTarget.rotationSpeed);
+            //rotationTarget.transform.localRotation = Quaternion.RotateTowards(rotationTarget.transform.localRotation, lookRotation, Time.deltaTime * rotationTarget.rotationSpeed);
         }
 
-        Vector3 currentDirection = shootingPoint.forward;
-        currentDirection.y = 0;
-        Vector3 currentVelocity = currentDirection.normalized * _projectileSpeed;
-        currentVelocity.y = antiGravity + deltaY;
-
+        Vector3 currentVelocity = shootingPoint.forward * _projectileSpeed;
+        Debug.DrawLine(shootingPoint.position, shootingPoint.position + projectedVelocity * time, Color.red);
+        Debug.DrawLine(shootingPoint.position, shootingPoint.position + currentVelocity * time, Color.blue);
         float difference = Vector3.Distance(currentVelocity, projectedVelocity);
-        if (difference < accuracyMargin)
+        if (Vector3.Angle(currentVelocity, projectedVelocity) < accuracyMargin)
             onAim?.Invoke(projectedVelocity);
     }
 }
