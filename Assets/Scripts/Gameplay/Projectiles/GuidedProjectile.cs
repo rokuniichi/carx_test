@@ -24,7 +24,11 @@ public class GuidedProjectile : BaseProjectile {
     }    
 
     void Update () {
-		if (_target == null) SelfRemove();
+		if (_target == null)
+		{
+			SelfRemove();
+			return;
+		}
 		Vector3 translation = _target.transform.position - transform.position;
 		float frameDistance = speed * Time.deltaTime;
 		if (translation.magnitude > frameDistance) {
