@@ -17,7 +17,7 @@ public class AimRotation : MonoBehaviour, ITowerSystem
 
     [SerializeField] private Transform shootingPoint;
     [SerializeField] private float accuracyMargin;
-    [SerializeField] List<RotationTarget> rotationTargets;
+    [SerializeField] private List<RotationTarget> rotationTargets;
     [SerializeField] private OnCannonAim onAim;
 
     private Transform _currentTarget;
@@ -73,8 +73,8 @@ public class AimRotation : MonoBehaviour, ITowerSystem
         }
 
         Vector3 currentVelocity = shootingPoint.forward * _projectileSpeed;
-        Debug.DrawLine(shootingPoint.position, shootingPoint.position + projectedVelocity * time, Color.red);
-        Debug.DrawLine(shootingPoint.position, shootingPoint.position + currentVelocity * time, Color.blue);
+        //Debug.DrawLine(shootingPoint.position, shootingPoint.position + projectedVelocity * time, Color.red);
+        //Debug.DrawLine(shootingPoint.position, shootingPoint.position + currentVelocity * time, Color.blue);
         float difference = Vector3.Distance(currentVelocity, projectedVelocity);
         if (Vector3.Angle(currentVelocity, projectedVelocity) < accuracyMargin)
             onAim?.Invoke(projectedVelocity);
