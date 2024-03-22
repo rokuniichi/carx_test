@@ -6,9 +6,9 @@ public class SphericalTargetSystem : MonoBehaviour, ITowerSystem
 {
 	[SerializeField] private OnSetTarget onSetTarget;
 
-	private LayerMask _layerMask;
-	private SphereCollider _sphereCollider;
-	private Transform _currentTarget;
+	private LayerMask          _layerMask;
+	private SphereCollider     _sphereCollider;
+	private Transform          _currentTarget;
 	private HashSet<Transform> _allTargets;
 
 	public void Init(TowerData towerData)

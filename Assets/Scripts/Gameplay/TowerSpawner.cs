@@ -3,12 +3,12 @@
 public class TowerSpawner : MonoBehaviour
 {
     // Spaghetti class for prototyping/debugging
-    [SerializeField] private Camera _mainCamera;
+    [SerializeField] private Camera    _mainCamera;
     [SerializeField] private LayerMask _layerMask;
 
     private GameObject _currentBase;
-    private Tower _currentWeapon;
-    private TowerData _currentData;
+    private Tower      _currentWeapon;
+    private TowerData  _currentData;
     public void SelectTower(TowerData towerData)
     {
         GameObject towerBase = PoolManager.Instance.Create(towerData.BasePrefab);

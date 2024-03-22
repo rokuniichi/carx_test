@@ -9,19 +9,19 @@ public class AimRotation : MonoBehaviour, ITowerSystem
     public class RotationTarget
     {
         [SerializeField] public Transform transform;
-        [SerializeField] public float rotationSpeed;
-        [SerializeField] public bool lockX;
-        [SerializeField] public bool lockY;
-        [SerializeField] public bool lockZ;
+        [SerializeField] public float     rotationSpeed;
+        [SerializeField] public bool      lockX;
+        [SerializeField] public bool      lockY;
+        [SerializeField] public bool      lockZ;
     }
 
-    [SerializeField] private Transform shootingPoint;
-    [SerializeField] private float accuracyMargin;
+    [SerializeField] private Transform            shootingPoint;
+    [SerializeField] private float                accuracyMargin;
     [SerializeField] private List<RotationTarget> rotationTargets;
-    [SerializeField] private OnCannonAim onAim;
+    [SerializeField] private OnCannonAim          onAim;
 
     private Transform _currentTarget;
-    private float _projectileSpeed;
+    private float     _projectileSpeed;
 
     public void Init(TowerData towerData)
     {
@@ -55,7 +55,8 @@ public class AimRotation : MonoBehaviour, ITowerSystem
         IPredictable targetPrediction = _currentTarget.GetComponent<IPredictable>();
         if (targetPrediction == null) return;
         float time = GetTimeToHit(_currentTarget.position, targetPrediction.Velocity, shootingPoint.position, _projectileSpeed);
-        Vector3 hitPoint = targetPrediction.GetPositionInTime(time);
+        Vector3 hitPoint = _currentTarget.position + targetPrediction.Velocity * time;
+        //Debug.DrawLine(transform.position, transform.position + _velocity * time);
         Vector3 projectedDirection = hitPoint - shootingPoint.position;
         projectedDirection.y = 0;
         float antiGravity = -Physics.gravity.y * time / 2;

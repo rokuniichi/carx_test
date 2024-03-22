@@ -3,8 +3,9 @@ using UnityEngine.Events;
 
 public class TimerBehaviour : MonoBehaviour
 {
-    [SerializeField] protected float duration;
-    [SerializeField] private bool immediate;
+    [SerializeField] protected float    duration;
+
+    [SerializeField] private bool       immediate;
     [SerializeField] private UnityEvent onTimerStart;
     [SerializeField] private UnityEvent onTimerEnd;
 

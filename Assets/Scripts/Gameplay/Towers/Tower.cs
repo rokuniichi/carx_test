@@ -4,7 +4,7 @@ using UnityEngine.Events;
 public class Tower : MonoBehaviour 
 {
 	[SerializeField] private OnTowerInit onTowerInit;
-	[SerializeField] private UnityEvent onFire;
+	[SerializeField] private UnityEvent  onFire;
 
 	private TowerData _towerData;
 	private bool _onCooldown;

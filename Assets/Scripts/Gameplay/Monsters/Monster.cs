@@ -5,29 +5,22 @@ using System.Collections.Generic;
 public class Monster : MonoBehaviour, IKillable, IDamagable, IPredictable {
 
 	public Action<Transform> OnKill { get; set; }
-	public Vector3 Velocity => _velocity;
+	public Vector3 Velocity => _direction.normalized * _speed;
 
-	private MonsterData _monsterData;
-	private List<Transform> _path;
+	private Queue<Transform> _path;
+	private Transform        _moveTarget;
 
 	private float _health;
 	private float _speed;
 
-	private Vector3 _velocity;
 	private Vector3 _direction => _moveTarget.transform.position - transform.position;
-
-	private Transform _moveTarget;
-
-	private int _currentIndex;
 
     public void Init(MonsterData monsterData, List<Transform> path)
     {
-		_monsterData = monsterData;
-		_path = path;
-		_currentIndex = 0;
-		_health = _monsterData.MaxHealth;
-		_speed = _monsterData.Speed;
-		_moveTarget = _path[_currentIndex];
+		_health     = monsterData.MaxHealth;
+		_speed      = monsterData.Speed;
+		_path       = new Queue<Transform>(path);
+		_moveTarget = _path.Dequeue();
 	}
 
 	public void KillSelf()
@@ -45,38 +38,23 @@ public class Monster : MonoBehaviour, IKillable, IDamagable, IPredictable {
 		}
 	}
 
-	// TODO: Translate to path
-	public Vector3 GetPositionInTime(float time)
-	{
-		Debug.DrawLine(transform.position, transform.position + _velocity * time);
-		return transform.position + _velocity * time;
-	}
-
-
 	private void Update()
 	{
 		if (_moveTarget == null)
 			return;
 
-		_velocity = _direction.normalized * _speed;
 		float frameDistance = _speed * Time.deltaTime;
 		if (_direction.magnitude > frameDistance)
 		{
-			transform.position += _velocity * Time.deltaTime;
-			transform.forward = _velocity;
+			transform.position += Velocity * Time.deltaTime;
+			transform.forward = Velocity;
 		}
 		else
 		{
-			if (_currentIndex == _path.Count)
-			{
+			if (_path.Count == 0)
 				KillSelf();
-				return;
-			}
 			else
-            {
-				_moveTarget = _path[_currentIndex++];
-			}
-				
+				_moveTarget = _path.Dequeue();
 		}
 	}
 }

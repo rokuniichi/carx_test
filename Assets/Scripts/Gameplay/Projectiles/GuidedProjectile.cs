@@ -2,7 +2,7 @@
 
 public class GuidedProjectile : BaseProjectile {
 	private Transform _target;
-	private Vector3 _lastTargetPosition;
+	private Vector3   _lastTargetPosition;
 	public void SetTarget(Transform target)
 	{
 		_target = target;
