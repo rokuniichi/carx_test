@@ -2,7 +2,7 @@
 
 public class GuidedProjectile : BaseProjectile {
 	private Transform _target;
-
+	private Vector3 _lastTargetPosition;
 	public void SetTarget(Transform target)
 	{
 		_target = target;
@@ -24,15 +24,15 @@ public class GuidedProjectile : BaseProjectile {
     }    
 
     void Update () {
-		if (_target == null)
-		{
-			SelfRemove();
-			return;
-		}
-		Vector3 translation = _target.transform.position - transform.position;
+		if (_target != null)
+			_lastTargetPosition = _target.transform.position;
+
+		Vector3 translation = _lastTargetPosition - transform.position;
 		float frameDistance = speed * Time.deltaTime;
-		if (translation.magnitude > frameDistance) {
+		if (translation.magnitude > frameDistance)
 			transform.Translate(translation.normalized * frameDistance);
-		}
+		else
+			if (_target == null)
+				SelfRemove();
 	}
 }
