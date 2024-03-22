@@ -48,6 +48,7 @@ public class Monster : MonoBehaviour, IKillable, IDamagable, IPredictable {
 	// TODO: Translate to path
 	public Vector3 GetPositionInTime(float time)
 	{
+		Debug.DrawLine(transform.position, transform.position + _velocity * time);
 		return transform.position + _velocity * time;
 	}
 

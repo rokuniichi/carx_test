@@ -9,7 +9,7 @@ public class PoolManager : MonoBehaviour
 
     private Dictionary<string, Queue<GameObject>> _pools;
 
-    private void Start()
+    private void Awake()
     {
         _instance = this;
         _pools = new Dictionary<string, Queue<GameObject>>();

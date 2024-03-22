@@ -12,14 +12,13 @@ public class TimerBehaviour : MonoBehaviour
 
     private void Start()
     {
-        _timer = new Timer();
         if (immediate) StartTimer();
     }
 
     public void StartTimer()
     {
+        _timer = new Timer();
         _timer.OnTimerEnd += OnTimerEnd;
-
         _timer.Start(duration);
         onTimerStart?.Invoke();
     }
@@ -27,12 +26,11 @@ public class TimerBehaviour : MonoBehaviour
     private void OnTimerEnd()
     {
         _timer.OnTimerEnd -= OnTimerEnd;
-
         onTimerEnd?.Invoke();
     }
 
     private void Update()
     {
-        _timer.Tick(Time.deltaTime);
+        if (_timer != null) _timer.Tick(Time.deltaTime);
     }
 }
