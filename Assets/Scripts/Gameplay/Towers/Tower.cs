@@ -7,7 +7,7 @@ public class Tower : MonoBehaviour
 	[SerializeField] private UnityEvent  onFire;
 
 	private TowerData _towerData;
-	private bool _onCooldown;
+	private bool      _onCooldown;
 
     public void Init(TowerData towerData)
     {
